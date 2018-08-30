@@ -6,7 +6,5 @@ MCIT Big Data Project to implement the double join on two files and practice Had
 * **cricri777** - *Initial work*
 
 # TODO :
-- Complete and Test the first DoubleJoinMapper
-- Code the first DoubleJoinReducer 
-- Code the second DoubbleJoinMapper
-- Code the second DoublJoindReducer
+- Refactor the code
+- validate that it is actually working...

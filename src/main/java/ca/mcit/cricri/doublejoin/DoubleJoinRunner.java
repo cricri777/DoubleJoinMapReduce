@@ -16,7 +16,7 @@ public class DoubleJoinRunner {
 
         // Paths to input and output
         Path input = new Path(args[0]);
-        Path intermediateResult = new Path("/user/cricri777/intermediate");
+        Path intermediateResult = new Path("/user/cricri/intermediate");
         Path output = new Path(args[1]);
 
         // Job
@@ -24,22 +24,32 @@ public class DoubleJoinRunner {
 
         // Job classes to run
         job1.setJarByClass(DoubleJoinRunner.class);
-        job1.setMapperClass(DoubleJoinR_SMapper.class);
-        job1.setReducerClass(DoubleJoinReducer.class);
+        job1.setMapperClass(DoubleJoinMap_FirstIteration.class);
+        job1.setReducerClass(DoubleJoinReducer_FirstIteration.class);
+        job1.setMapOutputKeyClass(Text.class);
+        job1.setMapOutputValueClass(Text.class);
         job1.setOutputKeyClass(Text.class);
-        job1.setOutputValueClass(IntWritable.class);
+        job1.setOutputValueClass(Text.class);
 
         FileInputFormat.addInputPath(job1, input);
         FileOutputFormat.setOutputPath(job1, intermediateResult);
 
-//        System.exit(job.waitForCompletion(true)?0:1);
         job1.waitForCompletion(true);
 
 
-        Job job2 = Job.getInstance(configuration, "join-S-and-t-cricri");
-        FileInputFormat.addInputPath(job2, intermediateResult);
+        Job job2 = Job.getInstance(configuration, "join-S-and-All-cricri");
+        job2.setJarByClass(DoubleJoinRunner.class);
+        job2.setMapperClass(DoubleJoinMap_SecondIteration.class);
+        job2.setReducerClass(DoubleJoinReducer_SecondIteration .class);
+        job2.setMapOutputKeyClass(Text.class);
+        job2.setMapOutputValueClass(Text.class);
+        job2.setOutputKeyClass(Text.class);
+        job2.setOutputValueClass(Text.class);
+
+        FileInputFormat.setInputPaths(job2, input, intermediateResult);
         FileOutputFormat.setOutputPath(job2, output);
-        job2.waitForCompletion(true);
+
+        System.exit(job2.waitForCompletion(true)?0:1);
     }
 
 }
